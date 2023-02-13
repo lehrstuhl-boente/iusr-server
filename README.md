@@ -2,6 +2,8 @@
 
 Backend for the IusR open source code learning platform.
 
+Project structure is oriented on this tutorial: https://www.youtube.com/watch?v=GHTA143_b-s
+
 ## Project Setup
 
 ### Development Environment
