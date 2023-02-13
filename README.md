@@ -20,3 +20,31 @@ TODO
 **Framework:** Nest.js, https://docs.nestjs.com/  
 **ORM:** Prisma, https://www.prisma.io/docs  
 **Database:** SQLite, DB will be created inside the /prisma folder
+
+## API Endpoints
+
+### Authentication
+
+#### Register
+
+POST /register  
+Request body:
+
+```json
+{
+  "email": "a@a.com",
+  "password": "123"
+}
+```
+
+#### Login
+
+POST /login  
+Request body:
+
+```json
+{
+  "email": "a@a.com",
+  "password": "123"
+}
+```

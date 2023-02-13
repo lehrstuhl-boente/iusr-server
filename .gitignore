@@ -26,11 +26,12 @@ lerna-debug.log*
 *.launch
 .settings/
 *.sublime-workspace
-
-# IDE - VSCode
 .vscode/
 
 # Database
 *.sqlite3
 *.sqlite3-journal
 /prisma/migrations
+
+# Environment
+.env
