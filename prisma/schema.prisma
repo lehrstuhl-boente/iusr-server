@@ -15,11 +15,15 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   
-  email     String
+  email     String    @unique
   password  String
 
   firstName String?
   lastName  String?
+
+  courses   Course[]  // user has many courses
+
+  @@map("users")  // map User model to users table in DB
 }
 
 model Course {
@@ -29,4 +33,9 @@ model Course {
 
   title       String
   description String?
+
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])   // course belongs to only one user, stores in col userId and references col id from User
+
+  @@map("courses")
 }
