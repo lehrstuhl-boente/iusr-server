@@ -7,13 +7,13 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  register(@Body() dto: AuthDto) {
-    return this.authService.register(dto);
+  register(@Body() data: AuthDto) {
+    return this.authService.register(data);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  login(@Body() dto: AuthDto) {
-    return this.authService.login(dto);
+  login(@Body() data: AuthDto) {
+    return this.authService.login(data);
   }
 }

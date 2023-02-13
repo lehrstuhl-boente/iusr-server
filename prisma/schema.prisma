@@ -17,6 +17,7 @@ model User {
   
   email     String    @unique
   password  String
+  isAdmin   Boolean   @default(false)
 
   firstName String?
   lastName  String?
