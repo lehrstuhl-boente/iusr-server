@@ -1,3 +1,3 @@
 const { AuthGuard } = require('@nestjs/passport');
 
-export class JwtGuard extends AuthGuard('jwt') {}
+export class UserGuard extends AuthGuard('jwt') {}

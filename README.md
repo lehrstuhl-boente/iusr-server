@@ -30,7 +30,7 @@ TODO
 #### Register
 
 POST /register  
-Request body:
+Request body example:
 
 ```json
 {
@@ -42,7 +42,7 @@ Request body:
 #### Login
 
 POST /login  
-Request body:
+Request body example:
 
 ```json
 {

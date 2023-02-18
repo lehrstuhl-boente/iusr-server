@@ -35,8 +35,8 @@ model Course {
   title       String
   description String?
 
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])   // course belongs to only one user, stores in col userId and references col id from User
+  creatorId   Int
+  creator     User      @relation(fields: [creatorId], references: [id])   // course belongs to only one user (=creator), stores reference in col creatorId and references col id from User
 
   @@map("courses")
 }
