@@ -35,7 +35,7 @@ Request body example:
 ```json
 {
   "email": "a@a.com",
-  "password": "123"
+  "password": "asdf"
 }
 ```
 
