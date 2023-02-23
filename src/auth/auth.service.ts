@@ -60,7 +60,7 @@ export class AuthService {
     });
 
     return {
-      access_token: token,
+      accessToken: token,
     };
   }
 }
