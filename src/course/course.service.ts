@@ -7,7 +7,11 @@ import { CourseDto } from './dto';
 export class CourseService {
   constructor(private prisma: PrismaService) {}
 
-  getAllCourses() {}
+  getAllCourses() {
+    return this.prisma.course.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 
   createCourse(data: CourseDto, user: User) {
     return this.prisma.course.create({
@@ -15,6 +19,34 @@ export class CourseService {
         title: data.title,
         description: data.description,
         creatorId: user.id,
+      },
+    });
+  }
+
+  getCourseById(id: number) {
+    return this.prisma.course.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  updateCourse(id: number, data: CourseDto) {
+    return this.prisma.course.update({
+      where: {
+        id,
+      },
+      data: {
+        title: data.title,
+        description: data.description,
+      },
+    });
+  }
+
+  deleteCourse(id: number) {
+    return this.prisma.course.delete({
+      where: {
+        id,
       },
     });
   }
