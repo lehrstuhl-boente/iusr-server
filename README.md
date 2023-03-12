@@ -9,7 +9,7 @@ Project structure is oriented on this tutorial: https://www.youtube.com/watch?v=
 ### Development Environment
 
 1. run `npm install` from root directory
-2. run `npx prisma migrate dev` to setup SQLite DB
+2. run `npx prisma migrate dev` to setup SQLite DB / update schema
 3. run `npm run start:dev` to run development server
 4. optional: run `npx prisma studio` to launch GUI for the DB
 
@@ -22,31 +22,3 @@ TODO
 **Framework:** Nest.js, https://docs.nestjs.com/  
 **ORM:** Prisma, https://www.prisma.io/docs  
 **Database:** SQLite, DB will be created inside the /prisma folder
-
-## API Endpoints
-
-### Authentication
-
-#### Register
-
-POST /register  
-Request body example:
-
-```json
-{
-  "email": "a@a.com",
-  "password": "asdf"
-}
-```
-
-#### Login
-
-POST /login  
-Request body example:
-
-```json
-{
-  "email": "a@a.com",
-  "password": "123"
-}
-```

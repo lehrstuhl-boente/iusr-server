@@ -23,6 +23,7 @@ model User {
   lastName  String?
 
   courses   Course[]  // user has many courses
+  chapters  Chapter[] // user can create many chapters
 
   @@map("users")  // map User model to users table in DB
 }
@@ -36,7 +37,26 @@ model Course {
   description String?
 
   creatorId   Int
-  creator     User      @relation(fields: [creatorId], references: [id])   // course belongs to only one user (=creator), stores reference in col creatorId and references col id from User
+  creator     User      @relation(fields: [creatorId], references: [id])   // course belongs to only one user (=creator), stores reference in column creatorId and references column id from User
+
+  chapters    Chapter[]
 
   @@map("courses")
+}
+
+model Chapter {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  title       String
+  description String?
+
+  creatorId   Int
+  creator     User      @relation(fields: [creatorId], references: [id])
+
+  courseId    Int
+  course      Course    @relation(fields: [courseId], references: [id])
+
+  @@map("chapters")
 }
