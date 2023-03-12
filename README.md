@@ -9,13 +9,18 @@ Project structure is oriented on this tutorial: https://www.youtube.com/watch?v=
 ### Development Environment
 
 1. run `npm install` from root directory
-2. run `npx prisma migrate dev` to setup SQLite DB / update schema
+2. run `npx prisma migrate dev` to setup SQLite DB
 3. run `npm run start:dev` to run development server
-4. optional: run `npx prisma studio` to launch GUI for the DB
 
 ### Production Environment
 
 TODO
+
+## Useful Commands During Development
+
+`npx prisma migrate dev` applies changes made in the prisma schema to the database  
+`nest generate module/controller/service NAME --no-spec` creates module or controller oder service without test file
+`npx prisma studio --browser=none` launch GUI for the DB
 
 ## Techstack
 
