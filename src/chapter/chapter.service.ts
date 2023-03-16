@@ -19,13 +19,20 @@ export class ChapterService {
         'Course with ID ' + data.courseId + ' does not exist.',
       ]);
     }
-
     return this.prisma.chapter.create({
       data: {
         title: data.title,
         description: data.description,
         creatorId: user.id,
         courseId: data.courseId,
+      },
+    });
+  }
+
+  deleteChapter(id: number) {
+    return this.prisma.chapter.delete({
+      where: {
+        id,
       },
     });
   }

@@ -28,6 +28,9 @@ export class CourseService {
       where: {
         id,
       },
+      include: {
+        chapters: true,
+      },
     });
   }
 

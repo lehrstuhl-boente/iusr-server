@@ -1,4 +1,12 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { User } from '@prisma/client';
 import { GetUser } from 'src/auth/decorator';
 import { AdminGuard, UserGuard } from 'src/auth/guard';
@@ -14,5 +22,11 @@ export class ChapterController {
   @Post()
   createChapter(@Body() data: ChapterDto, @GetUser() user: User) {
     return this.chapterService.createChapter(data, user);
+  }
+
+  @UseGuards(AdminGuard)
+  @Delete(':id')
+  deleteChapter(@Param('id', new ParseIntPipe()) id: number) {
+    return this.chapterService.deleteChapter(id);
   }
 }
