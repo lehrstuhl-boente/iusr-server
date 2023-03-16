@@ -56,7 +56,7 @@ model Chapter {
   creator     User      @relation(fields: [creatorId], references: [id])
 
   courseId    Int
-  course      Course    @relation(fields: [courseId], references: [id])
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)  // cascade: if course is deleted, its chapters are too
 
   @@map("chapters")
 }

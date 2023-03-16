@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ChapterDto } from './dto';
+import { ChapterDto, EditChapterDto } from './dto';
 
 @Injectable()
 export class ChapterService {
@@ -33,6 +33,18 @@ export class ChapterService {
     return this.prisma.chapter.delete({
       where: {
         id,
+      },
+    });
+  }
+
+  updateChapter(id: number, data: EditChapterDto) {
+    return this.prisma.chapter.update({
+      where: {
+        id,
+      },
+      data: {
+        title: data.title,
+        description: data.description,
       },
     });
   }
