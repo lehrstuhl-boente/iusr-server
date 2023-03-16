@@ -29,7 +29,11 @@ export class CourseService {
         id,
       },
       include: {
-        chapters: true,
+        chapters: {
+          include: {
+            lessons: true,
+          },
+        },
       },
     });
   }

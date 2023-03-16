@@ -24,6 +24,7 @@ model User {
 
   courses   Course[]  // user has many courses
   chapters  Chapter[] // user can create many chapters
+  lessons   Lesson[]
 
   @@map("users")  // map User model to users table in DB
 }
@@ -58,5 +59,23 @@ model Chapter {
   courseId    Int
   course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)  // cascade: if course is deleted, its chapters are too
 
+  lessons     Lesson[]
+
   @@map("chapters")
+}
+
+model Lesson {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  title       String
+
+  creatorId   Int
+  creator     User      @relation(fields: [creatorId], references: [id])
+
+  chapterId   Int
+  chapter     Chapter   @relation(fields: [chapterId], references: [id])
+
+  @@map("lessons")
 }
