@@ -25,15 +25,15 @@ export class CourseController {
     return this.courseService.getAllCourses();
   }
 
+  @Get(':id')
+  getCourse(@Param('id', new ParseIntPipe()) id: number) {
+    return this.courseService.getCourseById(id);
+  }
+
   @UseGuards(AdminGuard) // only logged in users that are admins can create courses
   @Post()
   createCourse(@Body() data: CourseDto, @GetUser() user: User) {
     return this.courseService.createCourse(data, user);
-  }
-
-  @Get(':id')
-  getCourse(@Param('id', new ParseIntPipe()) id: number) {
-    return this.courseService.getCourseById(id);
   }
 
   @UseGuards(AdminGuard)
@@ -49,5 +49,11 @@ export class CourseController {
   @Delete(':id')
   deleteCourse(@Param('id', new ParseIntPipe()) id: number) {
     return this.courseService.deleteCourse(id);
+  }
+
+  @UseGuards(AdminGuard)
+  @Get(':id/chapters')
+  getCourseChapters(@Param('id', new ParseIntPipe()) id: number) {
+    return this.courseService.getChaptersByCourseId(id);
   }
 }

@@ -57,4 +57,12 @@ export class CourseService {
       },
     });
   }
+
+  getChaptersByCourseId(id: number) {
+    return this.prisma.chapter.findMany({
+      where: {
+        courseId: id,
+      },
+    });
+  }
 }
