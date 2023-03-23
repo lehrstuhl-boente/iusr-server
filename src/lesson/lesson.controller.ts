@@ -1,4 +1,12 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { User } from '@prisma/client';
 import { GetUser } from 'src/auth/decorator';
 import { AdminGuard, UserGuard } from 'src/auth/guard';
@@ -12,7 +20,13 @@ export class LessonController {
 
   @UseGuards(AdminGuard)
   @Post()
-  createChapter(@Body() data: CreateLessonDto, @GetUser() user: User) {
+  createLesson(@Body() data: CreateLessonDto, @GetUser() user: User) {
     return this.lessonService.createLesson(data, user);
+  }
+
+  @UseGuards(AdminGuard)
+  @Delete(':id')
+  deleteLesson(@Param('id', new ParseIntPipe()) id: number) {
+    return this.lessonService.deleteLesson(id);
   }
 }

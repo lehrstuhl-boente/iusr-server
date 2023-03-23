@@ -16,4 +16,12 @@ export class LessonService {
       },
     });
   }
+
+  deleteLesson(id: number) {
+    return this.prisma.lesson.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }
