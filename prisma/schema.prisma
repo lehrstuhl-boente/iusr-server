@@ -75,7 +75,7 @@ model Lesson {
   creator     User      @relation(fields: [creatorId], references: [id])
 
   chapterId   Int
-  chapter     Chapter   @relation(fields: [chapterId], references: [id])
+  chapter     Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade) // cascade: if chapter is deleted, its lessons are too
 
   @@map("lessons")
 }
