@@ -36,7 +36,9 @@ export class AuthService {
         // P2002: unique contraint failed, here: user with provided email already exists
         // list of prisma error codes: https://www.prisma.io/docs/reference/api-reference/error-reference#error-codes
         if (error.code == 'P2002') {
-          throw new ForbiddenException(['user with email already exists']); // nest.js 403 error
+          throw new ForbiddenException({
+            email: 'user with email already exists', // the object key is the name of the frontend field
+          }); // nest.js 403 error
         }
       }
       throw error; // throw if it's an unexpected error or BadRequestException (= not same passwords)

@@ -13,12 +13,10 @@ async function bootstrap() {
       whitelist: true,
       // adjust exception factory so that not only error messages but also field keys are returned
       exceptionFactory: (errors: ValidationError[]) => {
-        let newErrors = [];
+        let newErrors = {};
         errors.forEach((error) => {
-          newErrors.push({
-            field: error.property,
-            errors: Object.values(error.constraints),
-          });
+          // object key: name of frontend field, object value: array of the error messages belonging to this field
+          newErrors[error.property] = Object.values(error.constraints);
         });
         return new BadRequestException(newErrors);
       },
