@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
@@ -18,6 +19,11 @@ import { LessonService } from './lesson.service';
 @Controller('lessons')
 export class LessonController {
   constructor(private lessonService: LessonService) {}
+
+  @Get(':id')
+  getLesson(@Param('id', new ParseIntPipe()) id: number) {
+    return this.lessonService.getLesson(id);
+  }
 
   @UseGuards(AdminGuard)
   @Post()

@@ -7,6 +7,14 @@ import { CreateLessonDto, EditLessonDto } from './dto';
 export class LessonService {
   constructor(private prisma: PrismaService) {}
 
+  getLesson(id: number) {
+    return this.prisma.lesson.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
   createLesson(data: CreateLessonDto, user: User) {
     return this.prisma.lesson.create({
       data: {
