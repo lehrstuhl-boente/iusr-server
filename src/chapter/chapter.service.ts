@@ -35,10 +35,24 @@ export class ChapterService {
     });
   }
 
-  deleteChapter(id: number) {
-    return this.prisma.chapter.delete({
+  async deleteChapter(id: number) {
+    const deletedChapter = await this.prisma.chapter.delete({
       where: {
         id,
+      },
+    });
+    // make position value of every successive chapter one smaller
+    return await this.prisma.chapter.updateMany({
+      where: {
+        courseId: deletedChapter.courseId,
+        position: {
+          gt: deletedChapter.position, // gt = greater than
+        },
+      },
+      data: {
+        position: {
+          decrement: 1,
+        },
       },
     });
   }
