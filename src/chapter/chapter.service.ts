@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
+import { Chapter, Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChapterDto, EditChapterDto } from './dto';
 
@@ -51,6 +51,56 @@ export class ChapterService {
       data: {
         title: data.title,
         description: data.description,
+      },
+    });
+  }
+
+  async moveUp(id: number) {
+    // get chapter that should be moved (= moving chapter) to check if it's already at the top of the chapter
+    const chapter = await this.prisma.chapter.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (chapter.position === 1) {
+      throw new BadRequestException(
+        'Cannot move chapter up when already at first position.',
+      );
+    }
+    await this.moveChapter(chapter, -1);
+  }
+
+  // -1: move up; 1: move down
+  async moveChapter(chapter: Chapter, direction: 1 | -1) {
+    const oldPosition = chapter.position;
+    // change position of the moving chapter to 0 so that no duplicate position exists after updating preceding chapter (unique key contraint)
+    await this.prisma.chapter.update({
+      where: {
+        id: chapter.id,
+      },
+      data: {
+        position: 0,
+      },
+    });
+    // move the preceding/subsequent chapter one down/up (= old position of moving chapter)
+    await this.prisma.chapter.update({
+      where: {
+        position_courseId: {
+          position: chapter.position + direction,
+          courseId: chapter.courseId,
+        },
+      },
+      data: {
+        position: oldPosition,
+      },
+    });
+    // change moving chapter position from 0 to new position
+    await this.prisma.chapter.update({
+      where: {
+        id: chapter.id,
+      },
+      data: {
+        position: oldPosition + direction,
       },
     });
   }

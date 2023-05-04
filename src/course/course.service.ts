@@ -30,11 +30,14 @@ export class CourseService {
       },
       include: {
         chapters: {
+          orderBy: {
+            position: 'asc',
+          },
           include: {
             lessons: {
               orderBy: {
-                position: 'asc'
-              }
+                position: 'asc',
+              },
             },
           },
         },

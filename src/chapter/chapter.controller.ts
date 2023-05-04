@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  HttpCode,
   Param,
   ParseIntPipe,
   Patch,
@@ -38,5 +39,12 @@ export class ChapterController {
     @Body() data: EditChapterDto,
   ) {
     return this.chapterService.updateChapter(id, data);
+  }
+
+  @UseGuards(AdminGuard)
+  @HttpCode(204)
+  @Patch(':id/up')
+  moveUp(@Param('id', new ParseIntPipe()) id: number) {
+    return this.chapterService.moveUp(id);
   }
 }
