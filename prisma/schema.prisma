@@ -11,20 +11,20 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   
-  email     String    @unique
-  password  String
-  isAdmin   Boolean   @default(false)
+  email       String    @unique
+  password    String
+  isAdmin     Boolean   @default(false)
 
-  firstName String?
-  lastName  String?
+  firstName   String?
+  lastName    String?
 
-  courses   Course[]  // user has many courses
-  chapters  Chapter[] // user can create many chapters
-  lessons   Lesson[]
+  courses     Course[]  // user has many courses
+  chapters    Chapter[] // user can create many chapters
+  lessons     Lesson[]
 
   @@map("users")  // map User model to users table in DB
 }
@@ -70,6 +70,10 @@ model Lesson {
   updatedAt   DateTime  @updatedAt
 
   title       String
+  lang        String?   // programming language in code editor
+  task        String?   // richtext editor task description
+  code        String?   // code editor default code
+  position    Int       // order of the lesson inside a chapter
 
   creatorId   Int
   creator     User      @relation(fields: [creatorId], references: [id])
@@ -77,5 +81,6 @@ model Lesson {
   chapterId   Int
   chapter     Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade) // cascade: if chapter is deleted, its lessons are too
 
+  @@unique([position, chapterId])   // inside a chapter positions are unique
   @@map("lessons")
 }

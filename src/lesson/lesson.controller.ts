@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Patch,
@@ -44,5 +45,12 @@ export class LessonController {
     @Body() data: EditLessonDto,
   ) {
     return this.lessonService.updateLesson(id, data);
+  }
+
+  @UseGuards(AdminGuard)
+  @HttpCode(204)
+  @Patch(':id/up')
+  moveUp(@Param('id', new ParseIntPipe()) id: number) {
+    return this.lessonService.moveUp(id);
   }
 }
