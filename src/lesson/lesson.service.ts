@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Lesson, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateLessonDto, EditLessonDto } from './dto';
 
@@ -50,7 +50,7 @@ export class LessonService {
   }
 
   async moveUp(id: number) {
-    // get lesson that should be moved (= moving lesson) to check if it's already at the top
+    // get lesson that should be moved (= moving lesson) to check if it's already at the top of the chapter
     const lesson = await this.prisma.lesson.findUnique({
       where: {
         id,
@@ -61,21 +61,47 @@ export class LessonService {
         'Cannot move lesson up when already at first position.',
       );
     }
+    await this.moveLesson(lesson, -1);
+  }
+
+  async moveDown(id: number) {
+    // get lesson that should be moved (= moving lesson) to check if it's already at the end of the chapter
+    const lesson = await this.prisma.lesson.findUnique({
+      where: {
+        id,
+      },
+    });
+    const count = await this.prisma.lesson.count({
+      where: {
+        chapterId: lesson.chapterId,
+      },
+    });
+    if (lesson.position === count) {
+      throw new BadRequestException(
+        'Cannot move lesson up when already at last position.',
+      );
+    }
+    this.moveLesson(lesson, 1);
+  }
+
+  // TODO: reduce the number of queries (e.g. with batch queries)
+  // -1: move up; 1: move down
+  async moveLesson(lesson: Lesson, direction: 1 | -1) {
     const oldPosition = lesson.position;
     // change position of the moving lesson to 0 so that no duplicate position exists after updating preceding lesson (unique key contraint)
     await this.prisma.lesson.update({
       where: {
-        id,
+        id: lesson.id,
       },
       data: {
         position: 0,
       },
     });
-    // move the preceding lesson one down (= old position of moving lesson)
+    // move the preceding/subsequent lesson one down/up (= old position of moving lesson)
     await this.prisma.lesson.update({
       where: {
         position_chapterId: {
-          position: lesson.position - 1,
+          position: lesson.position + direction,
           chapterId: lesson.chapterId,
         },
       },
@@ -86,15 +112,11 @@ export class LessonService {
     // change moving lesson position from 0 to new position
     await this.prisma.lesson.update({
       where: {
-        id,
+        id: lesson.id,
       },
       data: {
-        position: oldPosition - 1,
+        position: oldPosition + direction,
       },
     });
-  }
-
-  moveDown(id: number) {
-    console.log('down', id);
   }
 }

@@ -53,4 +53,11 @@ export class LessonController {
   moveUp(@Param('id', new ParseIntPipe()) id: number) {
     return this.lessonService.moveUp(id);
   }
+
+  @UseGuards(AdminGuard)
+  @HttpCode(204)
+  @Patch(':id/down')
+  moveDown(@Param('id', new ParseIntPipe()) id: number) {
+    return this.lessonService.moveDown(id);
+  }
 }
