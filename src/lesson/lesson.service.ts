@@ -15,13 +15,18 @@ export class LessonService {
     });
   }
 
-  createLesson(data: CreateLessonDto, user: User) {
+  async createLesson(data: CreateLessonDto, user: User) {
+    const countLessons = await this.prisma.lesson.count({
+      where: {
+        chapterId: data.chapterId,
+      },
+    });
     return this.prisma.lesson.create({
       data: {
         title: data.title,
         chapterId: data.chapterId,
         creatorId: user.id,
-        position: 0,
+        position: countLessons + 1, // append at the end
       },
     });
   }

@@ -19,10 +19,16 @@ export class ChapterService {
         'Course with ID ' + data.courseId + ' does not exist.',
       ]);
     }
+    const countChapters = await this.prisma.chapter.count({
+      where: {
+        courseId: data.courseId,
+      },
+    });
     return this.prisma.chapter.create({
       data: {
         title: data.title,
         description: data.description,
+        position: countChapters + 1, // append at the end
         creatorId: user.id,
         courseId: data.courseId,
       },

@@ -52,6 +52,7 @@ model Chapter {
 
   title       String
   description String?
+  position    Int       // order of the chapters inside a course
 
   creatorId   Int
   creator     User      @relation(fields: [creatorId], references: [id])
@@ -61,6 +62,7 @@ model Chapter {
 
   lessons     Lesson[]
 
+  @@unique([position, courseId])   // inside a course chapter-positions are unique
   @@map("chapters")
 }
 
@@ -81,6 +83,6 @@ model Lesson {
   chapterId   Int
   chapter     Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade) // cascade: if chapter is deleted, its lessons are too
 
-  @@unique([position, chapterId])   // inside a chapter positions are unique
+  @@unique([position, chapterId])   // inside a chapter lesson-positions are unique
   @@map("lessons")
 }
