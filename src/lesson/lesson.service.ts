@@ -31,10 +31,24 @@ export class LessonService {
     });
   }
 
-  deleteLesson(id: number) {
-    return this.prisma.lesson.delete({
+  async deleteLesson(id: number) {
+    const deletedLesson = await this.prisma.lesson.delete({
       where: {
         id,
+      },
+    });
+    // make position value of every successive lesson one smaller
+    return await this.prisma.lesson.updateMany({
+      where: {
+        chapterId: deletedLesson.chapterId,
+        position: {
+          gt: deletedLesson.position, // gt = greater than
+        },
+      },
+      data: {
+        position: {
+          decrement: 1,
+        },
       },
     });
   }
