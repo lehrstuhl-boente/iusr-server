@@ -70,6 +70,26 @@ export class ChapterService {
     await this.moveChapter(chapter, -1);
   }
 
+  async moveDown(id: number) {
+    // get chapter that should be moved (= moving chapter) to check if it's already at the end of the chapter
+    const chapter = await this.prisma.chapter.findUnique({
+      where: {
+        id,
+      },
+    });
+    const count = await this.prisma.chapter.count({
+      where: {
+        courseId: chapter.courseId,
+      },
+    });
+    if (chapter.position === count) {
+      throw new BadRequestException(
+        'Cannot move chapter up when already at last position.',
+      );
+    }
+    this.moveChapter(chapter, 1);
+  }
+
   // -1: move up; 1: move down
   async moveChapter(chapter: Chapter, direction: 1 | -1) {
     const oldPosition = chapter.position;

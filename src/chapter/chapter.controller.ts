@@ -47,4 +47,11 @@ export class ChapterController {
   moveUp(@Param('id', new ParseIntPipe()) id: number) {
     return this.chapterService.moveUp(id);
   }
+
+  @UseGuards(AdminGuard)
+  @HttpCode(204)
+  @Patch(':id/down')
+  moveDown(@Param('id', new ParseIntPipe()) id: number) {
+    return this.chapterService.moveDown(id);
+  }
 }
