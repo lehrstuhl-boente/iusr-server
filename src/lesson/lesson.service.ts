@@ -54,7 +54,39 @@ export class LessonService {
   }
 
   private async calculateNextLessonId(lesson: any) {
+    const nextLesson = await this.prisma.lesson.findUnique({
+      select: {
+        id: true,
+      },
+      where: {
+        position_chapterId: {
+          chapterId: lesson.chapterId,
+          position: lesson.position + 1,
+        },
+      },
+    });
+    // just take next lesson
+    if (nextLesson) {
+      return nextLesson.id;
+    }
+    // no next lesson --> get first lesson of next chapter
+    const firstLessonOfNextChapter = await this.prisma.lesson.findFirst({
+      select: {
+        id: true,
+      },
+      where: {
+        position: 1,
+        chapter: {
+          position: lesson.chapter.position + 1,
+          courseId: lesson.chapter.courseId,
+        },
+      },
+    });
+    if (firstLessonOfNextChapter) {
+      return firstLessonOfNextChapter.id;
+    }
     // last lesson of last chapter
+    return null;
   }
 
   private async calculatePreviousLessonId(lesson: any) {
@@ -71,6 +103,7 @@ export class LessonService {
         where: {
           chapter: {
             position: lesson.chapter.position - 1,
+            courseId: lesson.chapter.courseId,
           },
         },
         orderBy: {
