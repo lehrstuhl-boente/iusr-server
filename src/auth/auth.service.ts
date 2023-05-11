@@ -25,7 +25,7 @@ export class AuthService {
       const hash = await argon.hash(data.password);
       const user = await this.prisma.user.create({
         data: {
-          email: data.email,
+          username: data.username,
           password: hash,
         },
       });
@@ -33,11 +33,11 @@ export class AuthService {
     } catch (error) {
       // if error was thrown by prisma
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        // P2002: unique contraint failed, here: user with provided email already exists
+        // P2002: unique contraint failed, here: user with provided username already exists
         // list of prisma error codes: https://www.prisma.io/docs/reference/api-reference/error-reference#error-codes
         if (error.code == 'P2002') {
           throw new ForbiddenException({
-            email: 'user with email already exists', // the object key is the name of the frontend field
+            username: 'user with username already exists', // the object key is the name of the frontend field
           }); // nest.js 403 error
         }
       }
@@ -48,10 +48,10 @@ export class AuthService {
   async login(data: LoginDto) {
     const user: User = await this.prisma.user.findUnique({
       where: {
-        email: data.email,
+        username: data.username,
       },
     });
-    // if user with email cannot be found or passwords don't match
+    // if user with username cannot be found or passwords don't match
     if (!user || !(await argon.verify(user.password, data.password))) {
       throw new ForbiddenException(['credentials incorrect']);
     }
@@ -61,7 +61,7 @@ export class AuthService {
   async signToken(user: User) {
     const payload = {
       sub: user.id,
-      email: user.email,
+      username: user.username,
     };
     const token: String = await this.jwt.signAsync(payload, {
       expiresIn: '1d',

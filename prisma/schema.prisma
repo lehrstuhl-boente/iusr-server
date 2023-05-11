@@ -15,7 +15,7 @@ model User {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   
-  email       String    @unique
+  username    String    @unique
   password    String
   isAdmin     Boolean   @default(false)
 
@@ -24,7 +24,8 @@ model User {
 
   courses     Course[]  // user has many courses
   chapters    Chapter[] // user can create many chapters
-  lessons     Lesson[]
+  lessons     Lesson[]  // lessons created by the user with default content for code
+  userLessons UserLesson[]  // lessons completed by the user
 
   @@map("users")  // map User model to users table in DB
 }
@@ -83,6 +84,26 @@ model Lesson {
   chapterId   Int
   chapter     Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade) // cascade: if chapter is deleted, its lessons are too
 
+  userData    UserLesson[]
+
   @@unique([position, chapterId])   // inside a chapter lesson-positions are unique
   @@map("lessons")
+}
+
+model UserLesson {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+
+  code        String?   // code that was written by the user
+  completed   Boolean   @default(false)
+
+  lessonId    Int
+  lesson      Lesson    @relation(fields: [lessonId], references: [id])
+
+  @@unique([userId, lessonId])
+  @@map("user_lessons")
 }
