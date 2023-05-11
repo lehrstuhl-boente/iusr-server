@@ -30,7 +30,7 @@ export class LessonService {
         },
       });
     }
-    const lessonWithChapter: any = await this.prisma.lesson.findUnique({
+    const lesson: any = await this.prisma.lesson.findUnique({
       where: {
         id,
       },
@@ -43,14 +43,9 @@ export class LessonService {
         chapter: true,
       },
     });
-    // chapter property is used to calculate next and previous lesson IDs
-    lessonWithChapter.next = await this.calculateNextLessonId(
-      lessonWithChapter,
-    );
-    lessonWithChapter.previous = await this.calculatePreviousLessonId(
-      lessonWithChapter,
-    );
-    return lessonWithChapter;
+    lesson.next = await this.calculateNextLessonId(lesson);
+    lesson.previous = await this.calculatePreviousLessonId(lesson);
+    return lesson;
   }
 
   private async calculateNextLessonId(lesson: any) {
