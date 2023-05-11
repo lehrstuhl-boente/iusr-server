@@ -7,12 +7,91 @@ import { CreateLessonDto, EditLessonDto } from './dto';
 export class LessonService {
   constructor(private prisma: PrismaService) {}
 
-  getLesson(id: number) {
-    return this.prisma.lesson.findUnique({
+  async getLesson(id: number, user: User) {
+    const userLesson = await this.prisma.userLesson.findUnique({
+      where: {
+        userId_lessonId: {
+          userId: user.id,
+          lessonId: id,
+        },
+      },
+    });
+    if (!userLesson) {
+      const lesson = await this.prisma.lesson.findUnique({
+        where: {
+          id,
+        },
+      });
+      await this.prisma.userLesson.create({
+        data: {
+          userId: user.id,
+          lessonId: id,
+          code: lesson.code, // copy code from lesson to userLesson
+        },
+      });
+    }
+    const lessonWithChapter: any = await this.prisma.lesson.findUnique({
       where: {
         id,
       },
+      include: {
+        userData: {
+          where: {
+            userId: user.id,
+          },
+        },
+        chapter: true,
+      },
     });
+    // chapter property is used to calculate next and previous lesson IDs
+    lessonWithChapter.next = await this.calculateNextLessonId(
+      lessonWithChapter,
+    );
+    lessonWithChapter.previous = await this.calculatePreviousLessonId(
+      lessonWithChapter,
+    );
+    return lessonWithChapter;
+  }
+
+  private async calculateNextLessonId(lesson: any) {
+    // last lesson of last chapter
+  }
+
+  private async calculatePreviousLessonId(lesson: any) {
+    // first lesson of first chapter
+    if (lesson.position === 1 && lesson.chapter.position === 1) {
+      return null;
+    }
+    // first lesson of not first chapter --> get last lesson of previous chapter
+    if (lesson.position === 1) {
+      const lastLessonOfPrevChapter = await this.prisma.lesson.findFirst({
+        select: {
+          id: true,
+        },
+        where: {
+          chapter: {
+            position: lesson.chapter.position - 1,
+          },
+        },
+        orderBy: {
+          position: 'desc',
+        },
+      });
+      return lastLessonOfPrevChapter.id;
+    }
+    // other lesson --> get lesson at previous position
+    const prevLesson = await this.prisma.lesson.findUnique({
+      select: {
+        id: true,
+      },
+      where: {
+        position_chapterId: {
+          position: lesson.position - 1,
+          chapterId: lesson.chapterId,
+        },
+      },
+    });
+    return prevLesson.id;
   }
 
   async createLesson(data: CreateLessonDto, user: User) {

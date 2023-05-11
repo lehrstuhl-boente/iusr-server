@@ -26,7 +26,10 @@ export class CourseController {
   }
 
   @Get(':id')
-  getCourse(@Param('id', new ParseIntPipe()) id: number) {
+  getCourse(
+    @Param('id', new ParseIntPipe()) id: number,
+    @GetUser() user: User,
+  ) {
     return this.courseService.getCourseById(id);
   }
 

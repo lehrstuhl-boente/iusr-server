@@ -22,8 +22,11 @@ export class LessonController {
   constructor(private lessonService: LessonService) {}
 
   @Get(':id')
-  getLesson(@Param('id', new ParseIntPipe()) id: number) {
-    return this.lessonService.getLesson(id);
+  getLesson(
+    @Param('id', new ParseIntPipe()) id: number,
+    @GetUser() user: User,
+  ) {
+    return this.lessonService.getLesson(id, user);
   }
 
   @UseGuards(AdminGuard)

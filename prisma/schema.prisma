@@ -73,10 +73,10 @@ model Lesson {
   updatedAt   DateTime  @updatedAt
 
   title       String
-  lang        String?   // programming language in code editor
-  task        String?   // richtext editor task description
-  code        String?   // code editor default code
-  position    Int       // order of the lesson inside a chapter
+  lang        String    @default("python") // programming language in code editor
+  task        String    @default("")       // richtext editor task description
+  code        String    @default("")       // code editor default code
+  position    Int                          // order of the lesson inside a chapter
 
   creatorId   Int
   creator     User      @relation(fields: [creatorId], references: [id])
@@ -98,7 +98,7 @@ model UserLesson {
   userId      Int
   user        User      @relation(fields: [userId], references: [id])
 
-  code        String?   // code that was written by the user
+  code        String?  // code that was written by the user
   completed   Boolean   @default(false)
 
   lessonId    Int
