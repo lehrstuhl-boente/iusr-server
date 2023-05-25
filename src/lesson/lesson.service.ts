@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Lesson, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateLessonDto, EditLessonDto } from './dto';
+import { CreateLessonDto, EditLessonDto, SubmitCodeDto } from './dto';
 
 @Injectable()
 export class LessonService {
@@ -16,6 +16,7 @@ export class LessonService {
         },
       },
     });
+    // if no userLesson exists for the current user and this lesson, create one
     if (!userLesson) {
       const lesson = await this.prisma.lesson.findUnique({
         where: {
@@ -244,5 +245,27 @@ export class LessonService {
         position: oldPosition + direction,
       },
     });
+  }
+
+  async submitCode(lessonId: number, user: User, data: SubmitCodeDto) {
+    const completed = this.validateCode(data.code);
+
+    // save code submitted by the user
+    await this.prisma.userLesson.update({
+      where: {
+        userId_lessonId: {
+          userId: user.id,
+          lessonId,
+        },
+      },
+      data: {
+        code: data.code,
+        completed,
+      },
+    });
+  }
+
+  validateCode(code: string) {
+    return true;
   }
 }

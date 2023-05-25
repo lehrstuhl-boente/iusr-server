@@ -7,8 +7,8 @@ import { UserController } from './user/user.controller';
 import { ChapterController } from './chapter/chapter.controller';
 import { ChapterService } from './chapter/chapter.service';
 import { ChapterModule } from './chapter/chapter.module';
-import { RouterModule } from '@nestjs/core';
 import { LessonModule } from './lesson/lesson.module';
+import { Judge0Module } from './judge0/judge0.module';
 
 @Module({
   imports: [
@@ -18,6 +18,7 @@ import { LessonModule } from './lesson/lesson.module';
     CourseModule,
     ChapterModule,
     LessonModule,
+    Judge0Module,
   ],
   controllers: [UserController, ChapterController],
   providers: [ChapterService],

@@ -13,7 +13,7 @@ import {
 import { User } from '@prisma/client';
 import { GetUser } from 'src/auth/decorator';
 import { AdminGuard, UserGuard } from 'src/auth/guard';
-import { CreateLessonDto, EditLessonDto } from './dto';
+import { CreateLessonDto, EditLessonDto, SubmitCodeDto } from './dto';
 import { LessonService } from './lesson.service';
 
 @UseGuards(UserGuard)
@@ -27,6 +27,16 @@ export class LessonController {
     @GetUser() user: User,
   ) {
     return this.lessonService.getLesson(id, user);
+  }
+
+  @Post(':id')
+  @HttpCode(200)
+  submitCode(
+    @Param('id', new ParseIntPipe()) id: number,
+    @GetUser() user: User,
+    @Body() data: SubmitCodeDto,
+  ) {
+    return this.lessonService.submitCode(id, user, data);
   }
 
   @UseGuards(AdminGuard)
