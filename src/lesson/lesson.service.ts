@@ -2,6 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Lesson, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateLessonDto, EditLessonDto, SubmitCodeDto } from './dto';
+import * as stripComments from 'strip-comments';
+import * as prettier from 'prettier';
 
 @Injectable()
 export class LessonService {
@@ -252,7 +254,7 @@ export class LessonService {
     // run code through judge0 api to get output
 
     // check if code is correct
-    const completed = this.validateCode(data.code);
+    const completed = await this.validateCode(lessonId, data.code);
 
     // save code submitted by the user
     await this.prisma.userLesson.update({
@@ -267,9 +269,36 @@ export class LessonService {
         completed,
       },
     });
+
+    return completed;
   }
 
-  validateCode(code: string) {
-    return true;
+  async validateCode(lessonId: number, code: string) {
+    // get solution and compare with code submitted by user
+    const lesson = await this.prisma.lesson.findUnique({
+      select: {
+        solution: true,
+        lang: true,
+      },
+      where: {
+        id: lessonId,
+      },
+    });
+
+    // remove line and block comments from code
+    const commentFreeCode = stripComments.default(code, {
+      language: lesson.lang,
+    });
+    const commentFreeSolution = stripComments.default(lesson.solution, {
+      language: lesson.lang,
+    });
+
+    // format code and solution with prettier to make them comparable (e.g. they may have different indent sizes)
+    const formattedCode = prettier.format(commentFreeCode, { parser: 'babel' });
+    const formattedSolution = prettier.format(commentFreeSolution, {
+      parser: 'babel',
+    });
+
+    return formattedCode === formattedSolution;
   }
 }
