@@ -251,10 +251,20 @@ export class LessonService {
   }
 
   async submitCode(lessonId: number, user: User, data: SubmitCodeDto) {
-    // run code through judge0 api to get output
+    const userLesson = await this.prisma.userLesson.findUnique({
+      select: {
+        completed: true,
+      },
+      where: {
+        userId_lessonId: {
+          userId: user.id,
+          lessonId,
+        },
+      },
+    });
 
     // check if code is correct
-    const completed = await this.validateCode(lessonId, data.code);
+    const correct = await this.validateCode(lessonId, data.code);
 
     // save code submitted by the user
     await this.prisma.userLesson.update({
@@ -266,11 +276,11 @@ export class LessonService {
       },
       data: {
         code: data.code,
-        completed,
+        completed: userLesson.completed === true ? true : correct, // if lesson was already completed, keep it completed
       },
     });
 
-    return completed;
+    return correct;
   }
 
   async validateCode(lessonId: number, code: string) {
