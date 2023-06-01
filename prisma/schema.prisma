@@ -76,6 +76,7 @@ model Lesson {
   lang        String    @default("python") // programming language in code editor
   task        String    @default("")       // richtext editor task description
   code        String    @default("")       // code editor default code
+  solution    String    @default("")       // solution code
   position    Int                          // order of the lesson inside a chapter
 
   creatorId   Int

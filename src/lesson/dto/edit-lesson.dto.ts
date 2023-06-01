@@ -17,4 +17,8 @@ export class EditLessonDto {
   @IsString()
   @IsOptional()
   code: string;
+
+  @IsString()
+  @IsOptional()
+  solution: string;
 }

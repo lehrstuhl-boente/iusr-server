@@ -8,7 +8,6 @@ import { ChapterController } from './chapter/chapter.controller';
 import { ChapterService } from './chapter/chapter.service';
 import { ChapterModule } from './chapter/chapter.module';
 import { LessonModule } from './lesson/lesson.module';
-import { Judge0Module } from './judge0/judge0.module';
 
 @Module({
   imports: [
@@ -18,7 +17,6 @@ import { Judge0Module } from './judge0/judge0.module';
     CourseModule,
     ChapterModule,
     LessonModule,
-    Judge0Module,
   ],
   controllers: [UserController, ChapterController],
   providers: [ChapterService],

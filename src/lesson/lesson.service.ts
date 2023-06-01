@@ -172,6 +172,7 @@ export class LessonService {
         lang: data.lang,
         task: data.task,
         code: data.code,
+        solution: data.solution,
       },
     });
   }
@@ -248,6 +249,9 @@ export class LessonService {
   }
 
   async submitCode(lessonId: number, user: User, data: SubmitCodeDto) {
+    // run code through judge0 api to get output
+
+    // check if code is correct
     const completed = this.validateCode(data.code);
 
     // save code submitted by the user
