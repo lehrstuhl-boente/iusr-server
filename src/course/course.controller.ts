@@ -30,7 +30,7 @@ export class CourseController {
     @Param('id', new ParseIntPipe()) id: number,
     @GetUser() user: User,
   ) {
-    return this.courseService.getCourseById(id);
+    return this.courseService.getCourseById(id, user);
   }
 
   @UseGuards(AdminGuard) // only logged in users that are admins can create courses

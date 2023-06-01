@@ -23,7 +23,7 @@ export class CourseService {
     });
   }
 
-  getCourseById(id: number) {
+  getCourseById(id: number, user: User) {
     return this.prisma.course.findUnique({
       where: {
         id,
@@ -37,6 +37,16 @@ export class CourseService {
             lessons: {
               orderBy: {
                 position: 'asc',
+              },
+              include: {
+                userData: {
+                  select: {
+                    completed: true,
+                  },
+                  where: {
+                    userId: user.id,
+                  },
+                },
               },
             },
           },

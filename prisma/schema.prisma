@@ -99,7 +99,7 @@ model UserLesson {
   userId      Int
   user        User      @relation(fields: [userId], references: [id])
 
-  code        String?  // code that was written by the user
+  code        String    @default("")  // code that was written by the user
   completed   Boolean   @default(false)
 
   lessonId    Int
