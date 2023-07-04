@@ -295,12 +295,18 @@ export class LessonService {
       },
     });
 
+    // TODO DIRTY FIX: remove comments from r code as if the code was in python
+    let stripCommentsLanguage = lesson.lang;
+    if (lesson.lang === 'r') {
+      stripCommentsLanguage = 'python';
+    }
+
     // remove line and block comments from code
     const commentFreeCode = stripComments.default(code, {
-      language: lesson.lang,
+      language: stripCommentsLanguage,
     });
     const commentFreeSolution = stripComments.default(lesson.solution, {
-      language: lesson.lang,
+      language: stripCommentsLanguage,
     });
 
     // format code and solution with prettier to make them comparable (e.g. they may have different indent sizes)

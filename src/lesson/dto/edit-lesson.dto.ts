@@ -8,6 +8,7 @@ export class EditLessonDto {
   chapterId: number;
 
   @IsString()
+  @IsOptional()
   lang: string;
 
   @IsString()
