@@ -301,7 +301,7 @@ export class LessonService {
       stripCommentsLanguage = 'python';
     }
 
-    // remove line and block comments from code
+    // remove line and block comments from code and solution
     const commentFreeCode = stripComments.default(code, {
       language: stripCommentsLanguage,
     });

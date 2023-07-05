@@ -19,7 +19,7 @@ export class AuthService {
 
   async register(data: RegisterDto) {
     try {
-      if (data.password !== data.passwordRepeat) {
+      if (data.password !== data.confirmPassword) {
         throw new BadRequestException(['passwords do not match']);
       }
       const hash = await argon.hash(data.password);

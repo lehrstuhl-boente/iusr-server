@@ -10,5 +10,5 @@ export class RegisterDto {
 
   @IsString()
   @IsNotEmpty()
-  passwordRepeat: string;
+  confirmPassword: string;
 }
