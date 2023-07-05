@@ -103,7 +103,7 @@ model UserLesson {
   completed   Boolean   @default(false)
 
   lessonId    Int
-  lesson      Lesson    @relation(fields: [lessonId], references: [id])
+  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)  // cascade: if lesson is deleted, its userLessons are too
 
   @@unique([userId, lessonId])
   @@map("user_lessons")
