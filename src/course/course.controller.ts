@@ -21,8 +21,8 @@ export class CourseController {
   constructor(private courseService: CourseService) {}
 
   @Get()
-  getCourses() {
-    return this.courseService.getAllCourses();
+  getCourses(@GetUser() user: User) {
+    return this.courseService.getAllCourses(user);
   }
 
   @Get(':id')

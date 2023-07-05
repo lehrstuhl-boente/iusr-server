@@ -7,10 +7,47 @@ import { CourseDto } from './dto';
 export class CourseService {
   constructor(private prisma: PrismaService) {}
 
-  getAllCourses() {
-    return this.prisma.course.findMany({
+  async getAllCourses(user: User) {
+    const courses = await this.prisma.course.findMany({
       orderBy: { createdAt: 'desc' },
     });
+
+    // add how many lectures are in the course and how many lectures the user has completed
+    const couresWithProgress = [];
+    for (const course of courses) {
+      const progressObject = await this.calculateCourseProgress(
+        course.id,
+        user.id,
+      );
+      Object.assign(course, progressObject);
+      couresWithProgress.push(course);
+    }
+    return couresWithProgress;
+  }
+
+  async calculateCourseProgress(courseId: number, userId: number) {
+    const lessonsTotal = await this.prisma.lesson.count({
+      where: {
+        chapter: {
+          courseId,
+        },
+      },
+    });
+    const lessonsCompleted = await this.prisma.userLesson.count({
+      where: {
+        userId,
+        completed: true,
+        lesson: {
+          chapter: {
+            courseId,
+          },
+        },
+      },
+    });
+    return {
+      lessonsTotal,
+      lessonsCompleted,
+    };
   }
 
   createCourse(data: CourseDto, user: User) {
