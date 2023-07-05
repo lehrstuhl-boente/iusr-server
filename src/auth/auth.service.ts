@@ -20,7 +20,7 @@ export class AuthService {
   async register(data: RegisterDto) {
     try {
       if (data.password !== data.confirmPassword) {
-        throw new BadRequestException(['passwords do not match']);
+        throw new BadRequestException(['Passwords do not match.']);
       }
       const hash = await argon.hash(data.password);
       const user = await this.prisma.user.create({
@@ -36,9 +36,7 @@ export class AuthService {
         // P2002: unique contraint failed, here: user with provided username already exists
         // list of prisma error codes: https://www.prisma.io/docs/reference/api-reference/error-reference#error-codes
         if (error.code == 'P2002') {
-          throw new ForbiddenException({
-            username: 'user with username already exists', // the object key is the name of the frontend field
-          }); // nest.js 403 error
+          throw new BadRequestException(['Username already taken.']); // nest.js 403 error
         }
       }
       throw error; // throw if it's an unexpected error or BadRequestException (= not same passwords)
@@ -53,7 +51,7 @@ export class AuthService {
     });
     // if user with username cannot be found or passwords don't match
     if (!user || !(await argon.verify(user.password, data.password))) {
-      throw new ForbiddenException(['credentials incorrect']);
+      throw new ForbiddenException(['Credentials incorrect.']);
     }
     return this.signToken(user);
   }
