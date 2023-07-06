@@ -4,10 +4,12 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateLessonDto, EditLessonDto, SubmitCodeDto } from './dto';
 import * as stripComments from 'strip-comments';
 import * as prettier from 'prettier';
+import axios, { AxiosError } from 'axios';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class LessonService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private config: ConfigService) {}
 
   async getLesson(id: number, user: User) {
     const userLesson = await this.prisma.userLesson.findUnique({
@@ -264,7 +266,10 @@ export class LessonService {
     });
 
     // check if code is correct
-    const correct = await this.validateCode(lessonId, data.code);
+    const codeCorrect = await this.validateCode(lessonId, data.code);
+
+    // run code with judge0
+    const codeResult = await this.runCode(data.code, data.lang);
 
     // save code submitted by the user
     await this.prisma.userLesson.update({
@@ -276,14 +281,17 @@ export class LessonService {
       },
       data: {
         code: data.code,
-        completed: userLesson.completed === true ? true : correct, // if lesson was already completed, keep it completed
+        completed: userLesson.completed === true ? true : codeCorrect, // if lesson was already completed, keep it completed
       },
     });
 
-    return correct;
+    return {
+      isCorrect: codeCorrect,
+      result: codeResult,
+    };
   }
 
-  async validateCode(lessonId: number, code: string) {
+  private async validateCode(lessonId: number, code: string) {
     // get solution and compare with code submitted by user
     const lesson = await this.prisma.lesson.findUnique({
       select: {
@@ -310,11 +318,52 @@ export class LessonService {
     });
 
     // format code and solution with prettier to make them comparable (e.g. they may have different indent sizes)
-    const formattedCode = prettier.format(commentFreeCode, { parser: 'babel' });
-    const formattedSolution = prettier.format(commentFreeSolution, {
-      parser: 'babel',
-    });
+    let formattedCode = commentFreeCode;
+    let formattedSolution = commentFreeSolution;
+    try {
+      formattedCode = prettier.format(commentFreeCode, { parser: 'babel' });
+      formattedSolution = prettier.format(commentFreeSolution, {
+        parser: 'babel',
+      });
+    } catch (e) {
+      // syntax error in code --> don't format
+    }
 
     return formattedCode === formattedSolution;
+  }
+
+  private async runCode(code: string, lang: string) {
+    const baseUrl = this.config.get('JUDGE0_URL');
+
+    // map language string to id: https://github.com/judge0/judge0#judge0-ce-1
+    const languageIds = {
+      c: 7,
+      'c#': 8,
+      'c++': 12,
+      java: 25,
+      javascript: 26,
+      php: 34,
+      python: 71,
+      r: 39,
+      sql: 43,
+      typescript: 45,
+    };
+
+    const url = `${baseUrl}/submissions/?base64_encoded=false&wait=true`;
+    const headers = {
+      'content-type': 'application/json',
+      'X-RapidAPI-Key': this.config.get('RAPIDAPI_KEY'),
+      'X-RapidAPI-Host': this.config.get('RAPIDAPI_HOST'),
+    };
+    const body = {
+      source_code: code,
+      language_id: languageIds[lang],
+    };
+    try {
+      const res = await axios.post(url, body, { headers });
+      return res.data;
+    } catch (e: any) {
+      return e.response.data;
+    }
   }
 }
