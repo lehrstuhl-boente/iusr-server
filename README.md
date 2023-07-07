@@ -15,11 +15,11 @@ Project structure based on this tutorial: https://www.youtube.com/watch?v=GHTA14
 
 ### Production Environment
 
-TODO
+Node.js Version 18.14
 
 ## Useful Commands During Development
 
-- `npx prisma migrate dev` applies changes made in the prisma schema to the database  
+- `npx prisma migrate dev` applies changes made in the prisma schema to the database
 - `nest generate module/controller/service NAME --no-spec` creates module or controller or service without test file
 - `npx prisma studio --browser=none` launch database GUI
 
