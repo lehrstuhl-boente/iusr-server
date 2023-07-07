@@ -38,8 +38,8 @@ model Course {
   title       String
   description String?
 
-  creatorId   Int
-  creator     User      @relation(fields: [creatorId], references: [id])   // course belongs to only one user (=creator), stores reference in column creatorId and references column id from User
+  creatorId   Int?
+  creator     User?      @relation(fields: [creatorId], references: [id], onDelete: SetNull)   // course belongs to only one user (=creator), stores reference in column creatorId and references column id from User
 
   chapters    Chapter[]
 
@@ -55,8 +55,8 @@ model Chapter {
   description String?
   position    Int       // order of the chapters inside a course
 
-  creatorId   Int
-  creator     User      @relation(fields: [creatorId], references: [id])
+  creatorId   Int?
+  creator     User?     @relation(fields: [creatorId], references: [id], onDelete: SetNull)
 
   courseId    Int
   course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)  // cascade: if course is deleted, its chapters are too

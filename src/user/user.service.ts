@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { ChangePasswordDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import * as argon from 'argon2';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -14,7 +14,7 @@ export class UserService {
         id: user.id,
       },
     });
-    if (!(await argon.verify(dbUser.password, data.oldPassword))) {
+    if (!bcrypt.compareSync(data.oldPassword, dbUser.password)) {
       throw new BadRequestException(['Old password is incorrect.']);
     }
     if (data.newPassword !== data.confirmNewPassword) {
@@ -25,7 +25,7 @@ export class UserService {
         id: user.id,
       },
       data: {
-        password: await argon.hash(data.newPassword),
+        password: bcrypt.hashSync(data.newPassword),
       },
     });
   }

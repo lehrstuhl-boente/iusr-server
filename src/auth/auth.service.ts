@@ -7,8 +7,9 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginDto, RegisterDto } from './dto';
-import * as argon from 'argon2';
 import { Prisma, User } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
+
 @Injectable({})
 export class AuthService {
   constructor(
@@ -22,7 +23,7 @@ export class AuthService {
       if (data.password !== data.confirmPassword) {
         throw new BadRequestException(['Passwords do not match.']);
       }
-      const hash = await argon.hash(data.password);
+      const hash = bcrypt.hashSync(data.password);
       const user = await this.prisma.user.create({
         data: {
           username: data.username,
@@ -50,7 +51,7 @@ export class AuthService {
       },
     });
     // if user with username cannot be found or passwords don't match
-    if (!user || !(await argon.verify(user.password, data.password))) {
+    if (!user || !bcrypt.compareSync(data.password, user.password)) {
       throw new ForbiddenException(['Credentials incorrect.']);
     }
     return this.signToken(user);
