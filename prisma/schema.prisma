@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -22,9 +22,9 @@ model User {
   firstName   String?
   lastName    String?
 
-  courses     Course[]  // user has many courses
-  chapters    Chapter[] // user can create many chapters
-  lessons     Lesson[]  // lessons created by the user with default content for code
+  courses     Course[]      // user has many courses
+  chapters    Chapter[]     // user can create many chapters
+  lessons     Lesson[]      // lessons created by the user with default content for code
   userLessons UserLesson[]  // lessons completed by the user
 
   @@map("users")  // map User model to users table in DB

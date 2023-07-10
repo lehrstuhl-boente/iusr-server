@@ -31,7 +31,6 @@ lerna-debug.log*
 # Database
 *.sqlite3
 *.sqlite3-journal
-/prisma/migrations
 
 # Environment
 .env
