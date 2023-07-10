@@ -31,7 +31,7 @@ TODO
 #### Docker
 
 Build Docker image: `docker build -t iusr-server .`  
-Run Docker container: `docker run -p 3001:3001 -e DATABASE_URL='...' -e JWT_SECRET='...' -e JUDGE0_URL='...'`
+Run Docker container: `docker run -p 3001:3001 -e DATABASE_URL='...' -e JWT_SECRET='...' -e JUDGE0_URL='...' iusr-server`
 
 ### Production Environment
 
