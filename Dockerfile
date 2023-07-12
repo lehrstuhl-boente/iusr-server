@@ -9,6 +9,7 @@ COPY . .
 RUN npm run build
 
 FROM node:18.14-buster as prod
+EXPOSE 3001
 ENV NODE_ENV=production
 WORKDIR /app
 RUN chown -R node /app
