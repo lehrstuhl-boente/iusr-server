@@ -20,6 +20,7 @@ Project structure based on this tutorial: https://www.youtube.com/watch?v=GHTA14
 #### Setup judge0
 
 TODO
+TEST
 
 #### Setup Nest.js Application
 
