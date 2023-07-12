@@ -8,6 +8,14 @@ Project structure based on this tutorial: https://www.youtube.com/watch?v=GHTA14
 
 ### Development Environment
 
+#### Setup Git and clone project
+
+At the moment, there exist two repositories for this project, one on GitHub and one on GitLab. The GitHub repository is the official one, the GitLab repo is only used for deployment. We always push to both repos but only pull from the GitHub repo.
+
+1. run `git clone git@github.com:lehrstuhl-boente/iusr-server.git`, this sets the pull remote to GitHub
+2. run `git remote set-url origin --push --add git@gitlab.com:rwf-dev/lstboente/iusr-server.git`
+3. run `git remote set-url origin --push --add git@github.com:lehrstuhl-boente/iusr-server.git`
+
 #### Setup MariaDB
 
 1. install MariaDB with Homebrew (macOS: run `brew install mariadb`)
@@ -20,7 +28,6 @@ Project structure based on this tutorial: https://www.youtube.com/watch?v=GHTA14
 #### Setup judge0
 
 TODO
-TEST
 
 #### Setup Nest.js Application
 
@@ -31,12 +38,10 @@ TEST
 
 ### Production Environment
 
-Node.js Version 18.14
-
 #### Docker
 
-Build Docker image: `docker build -t iusr-server .`  
-Run Docker container: `docker run -p 3001:3001 -e DATABASE_URL='' -e JWT_SECRET='...' -e JUDGE0_URL='...' iusr-server`
+Build Docker container: `docker-compose build`  
+Run Docker container: `docker-compose up`
 
 ## Useful Commands During Development
 
@@ -46,6 +51,7 @@ Run Docker container: `docker run -p 3001:3001 -e DATABASE_URL='' -e JWT_SECRET=
 
 ## Techstack
 
+**Node Version:** 18.14  
 **Framework:** Nest.js, https://docs.nestjs.com/  
 **ORM:** Prisma, https://www.prisma.io/docs  
 **Database:** SQLite, DB will be created inside the /prisma folder

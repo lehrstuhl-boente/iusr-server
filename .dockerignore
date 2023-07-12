@@ -1,0 +1,6 @@
+**/.vscode
+**/dist
+**/.git*
+**/.env*
+**/.dockerignore
+**/docker/docker-compose.ym
