@@ -333,27 +333,24 @@ export class LessonService {
   }
 
   private async runCode(code: string, lang: string) {
-    const baseUrl = this.config.get('JUDGE0_URL');
-
-    // map language string to id: https://github.com/judge0/judge0#judge0-ce-1
+    // map language string to id: https://github.com/judge0/judge0/blob/master/CHANGELOG.md#new-features-6 and https://github.com/judge0/judge0/blob/master/CHANGELOG.md#new-features-8
     const languageIds = {
-      c: 7,
-      'c#': 8,
-      'c++': 12,
-      java: 25,
-      javascript: 26,
-      php: 34,
+      c: 50,
+      'c#': 51,
+      'c++': 54,
+      java: 62,
+      javascript: 63,
+      php: 68,
       python: 71,
-      r: 39,
-      sql: 43,
-      typescript: 45,
+      typescript: 74,
+      r: 80,
+      sql: 82,
     };
 
-    const url = `${baseUrl}/submissions/?base64_encoded=false&wait=true`;
+    const baseUrl = this.config.get('JUDGE0_URL');
+    const url = baseUrl + '/submissions/?base64_encoded=false&wait=true';
     const headers = {
       'content-type': 'application/json',
-      'X-RapidAPI-Key': this.config.get('RAPIDAPI_KEY'),
-      'X-RapidAPI-Host': this.config.get('RAPIDAPI_HOST'),
     };
     const body = {
       source_code: code,
