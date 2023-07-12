@@ -28,14 +28,14 @@ TODO
 3. run `npx prisma migrate dev` to apply the Prisma ORM schema to the DB
 4. run `npm run start:dev` to run development server
 
-#### Docker
-
-Build Docker image: `docker build -t iusr-server .`  
-Run Docker container: `docker run -p 3001:3001 -e DATABASE_URL='...' -e JWT_SECRET='...' -e JUDGE0_URL='...' iusr-server`
-
 ### Production Environment
 
 Node.js Version 18.14
+
+#### Docker
+
+Build Docker image: `docker build -t iusr-server .`  
+Run Docker container: `docker run -p 3001:3001 -e DATABASE_URL='' -e JWT_SECRET='...' -e JUDGE0_URL='...' iusr-server`
 
 ## Useful Commands During Development
 
