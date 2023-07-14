@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   backend:
-    image: registry.gitlab.com/rwf-dev/lstboente/iusr-server/backend:${COMMIT:-latest}
+    image: registry.gitlab.com/rwf-dev/lstboente/iusr-server:${COMMIT:-latest}
     build:
       context: .
       dockerfile: ./Dockerfile
