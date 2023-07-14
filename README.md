@@ -56,11 +56,14 @@ A development database is required so that Prisma can create the necessary migra
 
 1. make a change to the repository code
 2. push the change (make sure it is properly pushed to the master branch of the GitLab repository)
-3. manually run the GitLab pipeline to build and push the docker image
+3. build and push the docker image via GitLab pipeline **(option1, preferred)**
    1. go to https://gitlab.com/rwf-dev/lstboente/iusr-server/-/pipelines
    2. click "Run Pipeline"
    3. make sure the master branch is selected and click "Run Pipeline" again
-4. from this point, the [RWI Informatik](https://rwi.app/team) team takes over
+4. build and push the docker image locally **(option2, may not work on all machines, e.g. Mac)**
+   1. run `docker-compose build`
+   2. run `docker-compose push`
+5. from this point, the [RWI Informatik](https://rwi.app/team) team takes over
 
 ## Useful Commands During Development
 
